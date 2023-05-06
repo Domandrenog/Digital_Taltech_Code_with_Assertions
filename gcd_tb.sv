@@ -345,12 +345,12 @@ module gcd_tb;
 		.start(start)
   	);
 
-	bind gcd_rtl: rtl pLib_gcd_rtl pLgr (
+	bind gcd_behavioural: beh pLib_gcd_rtl  #(.NBits(NBits)) pLgr (
 		.xi(xi), 
 		.yi(yi), 
 		.rst(rst), 
 		.xo(xo), 
-		.rdy(rdy2), 
+		.rdy(rdy), 
 		.clk(clk), 
 		.start(start)
 	);
