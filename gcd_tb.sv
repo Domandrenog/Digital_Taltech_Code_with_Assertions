@@ -306,8 +306,10 @@ module gcd_tb;
 	input [NBits-1:0] x,y;
 	begin
 		rst = 1'b1;
+		//$display("Time after rst = 1'b1: %t", $time);
 		#1;
 		rst = 1'b0;
+		//$display("Time after rst = 1'b0: %t", $time);
 		xi = x;
     		yi = y; 
 		start = 1'b0;

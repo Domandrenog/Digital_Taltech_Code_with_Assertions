@@ -1,3 +1,5 @@
+`timescale 1ns/1ns
+
 module pLib_gcd_rtl #(parameter NBits = 2) //didnt change
 	(
 	// Inputs
@@ -5,20 +7,6 @@ module pLib_gcd_rtl #(parameter NBits = 2) //didnt change
   	input rst, clk, start, rdy
 	);
 
-	
-	
-	//equal_numbers: assert property (
-			//@(posedge clk) ($rose(rdy) && xi == yi && xi != 0) |-> (xo == xi));
-	/*
-	equal_numbers: assert property (
-    			@(posedge clk) ($fell(start) && xi == yi && xi != 0) |-> ##1 (xo == xi))
-    			else $error($sformatf("Test case failed: expected xo=%0d, but got xo=%0d", xi, xo));
-
-	
-	zero_number: assert property (
-			@(posedge clk) ($rose(rdy) && (xi == 0 || yi == 0)) |-> (xo == xi + yi))
-			else $error($sformatf("Test case failed: expected xo=%0d, but got xo=%0d", xi, xo));
-	*/
 
 
 	//NBits should be a positive integer
@@ -42,10 +30,32 @@ module pLib_gcd_rtl #(parameter NBits = 2) //didnt change
 			@(posedge clk) ($rose(rdy)) |-> (rdy === 0 || rdy === 1)) else $error("rdy must be 0 or 1");
 
 
+	/*
+	// Sequence assertion for rst = 1'b1 followed by rst = 1'b0
+	sequence rst_assertion_seq(t_value);
+ 	 (rst == t_value) ##1 (rst == t_value);
+	endsequence;
+
+	rst_property: assert property(
+  	@(posedge clk) rst_assertion_seq(1) |=> rst_assertion_seq(0));
+	*/
 
 
+	/* Test times it will be wrong
+	// Sequence assertion for rst = 1'b1 followed by rst = 1'b0
+	sequence rst_assertion_seq;
+ 		@(posedge rst) rst == 1'b1 ##[1:$] @(negedge rst) rst == 1'b0;
+	endsequence;
 
-	
+	// Property for rst_assertion_seq
+	property rst_property;
+	  @(posedge rst) rst_assertion_seq;
+	endproperty;
+
+	// Assertion of rst_property
+	assert property (rst_property) else $display("Assertion error: rst = 1'b1 followed by rst = 1'b0 not satisfied at time %t", $time);
+	*/
+
 
 	//Cover 
 	property outputxo(value); //Cover Output between 0 and 25 
@@ -85,6 +95,7 @@ module pLib_gcd_rtl #(parameter NBits = 2) //didnt change
 		input_yi_ cover property (@(posedge clk) inputyi(b));
   		end
 	endgenerate
+
 
 
 endmodule
