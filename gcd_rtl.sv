@@ -13,7 +13,7 @@ module gcd_rtl #(parameter NBits = 2)
   	input rst, clk, start,
 
   	output reg [NBits-1:0] xo,
-  	output reg rdy = 1'b0
+  	output reg rdy
 
 	);
 	reg signed [NBits-1:0] x, y;
